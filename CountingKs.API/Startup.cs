@@ -1,6 +1,9 @@
 ﻿using CountingKs.Infrastructure.Data;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
+using Microsoft.AspNetCore.Mvc;
+using Microsoft.AspNetCore.Mvc.Infrastructure;
+using Microsoft.AspNetCore.Mvc.Routing;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
@@ -22,7 +25,19 @@ namespace CountingKs.API
             var connection = Configuration.GetConnectionString("CountingKsDB");
 
             services.AddDbContext<CountingKsContext>(options =>
-                options.UseSqlServer(Configuration.GetConnectionString("CountingKsDB")));            
+                options.UseSqlServer(Configuration.GetConnectionString("CountingKsDB")));
+
+            services.AddSingleton<IActionContextAccessor, ActionContextAccessor>();
+
+            services.AddScoped<ModelFactory, ModelFactory>((serviceProvider) =>
+            {
+                var contextAccessor = serviceProvider.GetRequiredService<IActionContextAccessor>();
+                var urlHelperFactory = serviceProvider.GetRequiredService<IUrlHelperFactory>();
+
+                IUrlHelper urlHelper = urlHelperFactory.GetUrlHelper(contextAccessor.ActionContext);
+
+                return new ModelFactory(urlHelper);
+            });
 
             services.AddMvc();
             services.RegisterDependencies();

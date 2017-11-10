@@ -7,14 +7,16 @@ using CountingKs.Core.DTOs;
 namespace CountingKs.API.Controllers
 {
     [Produces("application/json")]
-    [Route("api/nutrition/foods")]
-    public class FoodsController : BaseController
+    [Route("api/nutrition/foods", Name = RouteName.Foods)]
+    public class FoodsController : Controller
     {
-        private readonly IFoodStore foodStore;        
+        private readonly IFoodStore foodStore;
+        private readonly ModelFactory modelFactory;
 
-        public FoodsController(IFoodStore foodStore)
+        public FoodsController(IFoodStore foodStore, ModelFactory modelFactory)
         {
             this.foodStore = foodStore;
+            this.modelFactory = modelFactory;
         }
         public IActionResult Get(bool includeMeasures = true)
         {
@@ -24,12 +26,12 @@ namespace CountingKs.API.Controllers
 
 
             var results = foodList               
-                .Select(x => ModelFactory.Create(x));
+                .Select(x => modelFactory.Create(x));
 
             return Ok(results);
         }
 
-        [Route("{id}")]
+        [Route("{id}", Name = RouteName.GetFoodById)]
         public IActionResult Get(int id)
         {
             var food = foodStore.GetFood(id);
@@ -39,7 +41,7 @@ namespace CountingKs.API.Controllers
                 return NotFound();
             }
 
-            var model = ModelFactory.Create(food);
+            var model = modelFactory.Create(food);
 
             return Ok(model);
         }

@@ -10,25 +10,27 @@ namespace CountingKs.API.Controllers
 {
     [Produces("application/json")]
     [Route("api/nutrition/foods/{foodId}")]
-    public class MeasuresController : BaseController
+    public class MeasuresController : Controller
     {
         private readonly IMeasureStore measureStore;
+        private readonly ModelFactory modelFactory;
 
-        public MeasuresController(IMeasureStore measureStore)
+        public MeasuresController(IMeasureStore measureStore, ModelFactory modelFactory)
         {
             this.measureStore = measureStore;
+            this.modelFactory = modelFactory;
         }
 
-        [Route("measures")]
+        [Route("measures", Name = RouteName.Measures)]
         public IActionResult Get(int foodId)
         {
             var list = measureStore.GetMessuresForFood(foodId)
-                .Select(x => ModelFactory.Create(x));
+                .Select(x => modelFactory.Create(x));
 
             return Ok(list);
         }
 
-        [Route("measures/{id}")]
+        [Route("measures/{id}", Name = RouteName.GetMeasureById)]
         public IActionResult Get(int foodId, int id)
         {
             var measure = measureStore.GetMeasure(id);
@@ -38,7 +40,7 @@ namespace CountingKs.API.Controllers
                 return NotFound();
             }
 
-            var model = ModelFactory.Create(measure);
+            var model = modelFactory.Create(measure);
 
             return Ok(model);
         }
