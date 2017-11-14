@@ -11,6 +11,7 @@ namespace CountingKs.API
             Foods = "Foods",
             GetFoodById = "GetFoodById",
             Measures = "Measures",
-            GetMeasureById = "GetMeasuresById";
+            GetMeasureById = "GetMeasuresById",
+            DiaryList = "DiaryList";
     }
 }

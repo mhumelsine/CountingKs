@@ -7,6 +7,5 @@ namespace CountingKs.Core.Stores
     public interface IDeletable<T>
     {
         void Delete(T item);
-        void Delete(object id);
     }
 }

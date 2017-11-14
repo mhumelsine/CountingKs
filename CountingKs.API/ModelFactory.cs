@@ -2,6 +2,7 @@
 using CountingKs.Core.DTOs;
 using Microsoft.AspNetCore.Mvc;
 using System.Linq;
+using System;
 
 namespace CountingKs.API
 {
@@ -29,6 +30,15 @@ namespace CountingKs.API
                 Url = urlHelper.RouteUrl(RouteName.GetMeasureById, new { foodId = measure.FoodId, id = measure.Id }),
                 Calories = measure.Calories,
                 Description = measure.Description
+            };
+        }
+
+        internal DiaryModel Create(Diary diary)
+        {
+            return new DiaryModel
+            {
+                Url = urlHelper.RouteUrl(RouteName.DiaryList, new { diaryId = diary.CurrentDate.ToString("yyyy-MM-dd") }),
+                CurrentDate = diary.CurrentDate
             };
         }
     }

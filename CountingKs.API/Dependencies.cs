@@ -10,6 +10,7 @@ namespace CountingKs.API
         {
             services.AddScoped<IFoodStore, EfFoodStore>();
             services.AddScoped<IMeasureStore, EfMeasureStore>();
+            services.AddScoped<IDiaryStore, EfDiaryStore>();
         }
     }
 }
